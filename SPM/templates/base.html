@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ship Port Management</title>
+    <link rel="stylesheet" href="E:/DBMS project/static/base.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- FontAwesome CSS for Ship Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        a {
+            text-decoration: none;
+            color: blue;
+        }
+        a:hover {
+            text-decoration: underline;
+            transition: 15ms;
+        }
+
+        footer {
+        background: #111; /* Set to glossy black */
+        color: #fff;
+        box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
+    }
+
+    .footer-content {
+    padding: 40px; /* Increases the overall padding of the footer */
+}
+
+.footer-content .row {
+    justify-content: space-between;
+}
+
+.footer-content h5 {
+    font-size: 1.25rem; /* Slightly larger font size for headers */
+    margin-bottom: 15px;
+}
+
+.footer-content p, .footer-content ul {
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.footer-content .col-md-6, .footer-content .col-md-3 {
+    padding: 20px; /* Adds more space within each column */
+}
+
+.footer-content ul {
+    padding-left: 0; /* Removes left padding from lists */
+}
+
+.footer-content li {
+    margin-bottom: 10px; /* Adds space between list items */
+}
+
+    body {
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+    padding-bottom: 150px; /* Adjust this value based on the gap you need */
+}
+
+        .card {
+            height: 100%; /* Ensures all cards take up equal height */
+        }
+
+        .hero {
+            background: url('port-image.jpg') center/cover no-repeat;
+            height: 400px;
+        }
+
+        .overlay {
+            background-color: rgba(142, 159, 203, 0.8); 
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .features .card {
+            min-height: 250px; /* Ensures the cards are of equal height */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url_for('home') }}">Ship Port Management</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            {% if session.get('username') %}
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('display') }}">Display</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('search') }}">Search</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('report') }}">Reports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('logout') }}">Logout ({{ session['username'] }})</a>
+                    </li>
+                </ul>
+            </div>
+            {% else %}
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('signup') }}">Signup</a>
+                    </li>
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        {% block content %}
+        <!-- Hero Section -->
+        <section class="hero text-center text-white py-5">
+            <div class="overlay">
+                <div>
+                    <h1 class="display-4">Welcome to Ship Port Management</h1>
+                    <p class="lead">Efficiently managing global ship operations.</p>
+                    <a href="{{ url_for('display') }}" class="btn btn-primary btn-lg">Browse Database</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features py-5 bg-light">
+            <div class="row text-center">
+                <!-- New Registration Section -->
+                <div class="col-md-12 mb-4">
+                        <div class="card p-3 bg-warning">
+                            <i class="fas fa-user-plus" style="font-size: 2rem; color: #000;"></i>
+                            <h4>Register Ship, Captain, and Port</h4>
+                            <p>Register new ships, assign captains, and add ports to the system.</p>
+                        </div>
+                </div>
+            </div>
+
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <a href="{{ url_for('ships') }}">
+                        <div class="card p-3">
+                            <i class="fas fa-ship" style="font-size: 2rem; color: #007bff;"></i>
+                            <h4>Register Ship</h4>
+                            <p>Register New ships!</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="{{ url_for('ports') }}">
+                        <div class="card p-3">
+                            <i class="bi bi-geo" style="font-size: 2rem; color: #007bff;"></i>
+                            <h4>Register A Port</h4>
+                            <p>Add Ports To System</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="{{ url_for('captains') }}">
+                        <div class="card p-3">
+                            <i class="fas fa-user-circle" style="font-size: 2rem; color: #007bff;"></i>
+                            <h4>Register Captain</h4>
+                            <p>Enroll New Captain</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="features py-5 bg-light">
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <a href="{{ url_for('reserve_port') }}">
+                        <div class="card p-3">
+                            <i class="bi bi-geo" style="font-size: 2rem; color: #007bff;"></i>
+                            <h4>Book A Port</h4>
+                            <p>Book docking spots at available ports.</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="{{ url_for('ship_cargo') }}">
+                        <div class="card p-3">
+                            <i class="bi bi-box-seam" style="font-size: 2rem; color: #007bff;"></i>
+                            <h4>Ship Cargo</h4>
+                            <p>Manage cargo shipments efficiently.</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="{{ url_for('report') }}">
+                        <div class="card p-3">
+                            <i class="fas fa-file-alt" style="font-size: 2rem; color: #007bff;"></i>
+                            <h4>Report Generation</h4>
+                            <p>Generate detailed reports on the port and ship activities.</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+        {% endblock %}
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="row py-4">
+                <div class="col-md-6">
+                    <h5>About Us</h5>
+                    <p>We provide the best port management system to track ships, ports, captains, and cargo activities efficiently.</p>
+                </div>
+                <div class="col-md-3">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('home') }}">Home</a></li>
+                        <li><a href="{{ url_for('display') }}">Display</a></li>
+                        <li><a href="{{ url_for('search') }}">Search</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Contact</h5>
+                    <ul class="list-unstyled">
+                        <li>info@portmanagement.com</li>
+                        <li>+1-800-123-4567</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JavaScript and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

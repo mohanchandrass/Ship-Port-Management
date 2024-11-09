@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Ships</h2>
+
+    <!-- Add New Ship Form -->
+    <div class="card mb-4">
+        <div class="card-header">
+            Add New Ship
+        </div>
+        <div class="card-body">
+            <form action="{{ url_for('add_ship') }}" method="POST">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Ship Name</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="capacity" class="form-label">Capacity</label>
+                    <input type="number" class="form-control" id="capacity" name="capacity" required>
+                </div>
+                <div class="mb-3">
+                    <label for="type" class="form-label">Type</label>
+                    <input type="text" class="form-control" id="type" name="type" required>
+                </div>
+                <div class="mb-3">
+                    <label for="captain_id" class="form-label">Captain ID</label>
+                    <input type="text" class="form-control" id="captain_id" name="captain_id" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Ship</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Ships List -->
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Ship ID</th>
+                <th>Name</th>
+                <th>Capacity</th>
+                <th>Type</th>
+                <th>Captain ID</th>
+                <th>Captain Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ship in ships %}
+                <tr>
+                    <td>{{ ship['ship_id'] }}</td>
+                    <td>{{ ship['ship_name'] }}</td>
+                    <td>{{ ship['capacity'] }}</td>
+                    <td>{{ ship['type'] }}</td>
+                    <td>{{ ship['captain_id'] }}</td>
+                    <td>
+                        {% for captain in captains %}
+                            {% if captain['captain_id'] == ship['captain_id'] %}
+                                {{ captain['captain_name'] }}
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <!-- Update Ship Button triggers a modal -->
+                        <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#updateShipModal{{ ship['ship_id'] }}">
+                            Edit
+                        </button>
+
+                        <!-- Delete Ship Form -->
+                        <form action="{{ url_for('delete_ship', ship_id=ship['ship_id']) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to delete this ship?');">
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+
+                <!-- Update Ship Modal -->
+                <div class="modal fade" id="updateShipModal{{ ship['ship_id'] }}" tabindex="-1" aria-labelledby="updateShipModalLabel{{ ship['ship_id'] }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form action="{{ url_for('update_ship', ship_id=ship['ship_id']) }}" method="POST">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="updateShipModalLabel{{ ship['ship_id'] }}">Edit Ship</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="name{{ ship['ship_id'] }}" class="form-label">Ship Name</label>
+                                        <input type="text" class="form-control" id="name{{ ship['ship_id'] }}" name="name" value="{{ ship['ship_name'] }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="capacity{{ ship['ship_id'] }}" class="form-label">Capacity</label>
+                                        <input type="number" class="form-control" id="capacity{{ ship['ship_id'] }}" name="capacity" value="{{ ship['capacity'] }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="type{{ ship['ship_id'] }}" class="form-label">Type</label>
+                                        <input type="text" class="form-control" id="type{{ ship['ship_id'] }}" name="type" value="{{ ship['type'] }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="captain_name{{ ship['ship_id'] }}" class="form-label">Captain ID</label>
+                                        <input type="text" class="form-control" id="captain_id{{ ship['ship_id'] }}" name="captain_id" value="{{ ship['captain_id'] }}" required>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Update Ship</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

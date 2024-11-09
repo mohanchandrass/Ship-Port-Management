@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search - Ship Port Management</title>
+    <link rel="stylesheet" href="E:/DBMS project/static/base.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome CSS for Ship Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        a {
+            text-decoration: none;
+            color: blue;
+        }
+        a:hover {
+            text-decoration: underline;
+            transition: 15ms;
+        }
+
+        footer {
+            background: #111;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            padding-bottom: 150px;
+        }
+    </style>
+</head>
+<body>
+   <!-- Navigation Bar -->
+   <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ url_for('home') }}">Ship Port Management</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        {% if session.get('username') %}
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('display') }}">Display</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('search') }}">Search</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('report') }}">Reports</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">Logout ({{ session['username'] }})</a>
+                </li>
+            </ul>
+        </div>
+        {% else %}
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('signup') }}">Signup</a>
+                </li>
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</nav>
+
+    <!-- Flash Messages -->
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h2 class="text-center mb-4">Search Records</h2>
+
+        <!-- Search Form -->
+        <form action="{{ url_for('search') }}" method="POST" class="mb-4">
+            <div class="mb-3">
+                <label for="tableSelect" class="form-label">Select Table</label>
+                <select id="tableSelect" class="form-select" name="table" onchange="updateCriteriaOptions()" required>
+                    <option value="">-- Select Table --</option>
+                    <option value="ships">Ships</option>
+                    <option value="captains">Captains</option>
+                    <option value="ports">Ports</option>
+                    <option value="cargo">Cargo</option>
+                    <option value="reserve_port">Reservations</option>
+                    <option value="ship_cargo">Ship Cargo</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="criteriaSelect" class="form-label">Search Criteria</label>
+                <select id="criteriaSelect" class="form-select" name="criteria" required>
+                    <option value="">-- Select Criteria --</option>
+                </select>
+            </div>
+
+            <div class="mb-3" id="criteriaValueDiv" style="display: none;">
+                <label for="criteriaValue" class="form-label">Enter Search Criteria Value</label>
+                <input type="text" id="criteriaValue" class="form-control" name="search_term" required>
+            </div>
+
+            <div class="input-group mb-3">
+                <button class="btn btn-primary" type="submit">Search</button>
+            </div>
+        </form>
+
+        <!-- Search Results Table -->
+        {% if results %}
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    {% for column in columns %}
+                    <th>{{ column | capitalize }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in results %}
+                <tr>
+                    {% for column in columns %}
+                        <td>{{ result[column] }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No results found.</p>
+        {% endif %}
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="row py-4">
+                <div class="col-md-6">
+                    <h5>Ship Port Management</h5>
+                    <p>Efficiently managing ship ports and related operations.</p>
+                </div>
+                <div class="col-md-3">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('display') }}">Display</a></li>
+                        <li><a href="{{ url_for('search') }}">Search</a></li>
+                        <li><a href="{{ url_for('report') }}">Report</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Contact</h5>
+                    <p>Email: info@shipport.com</p>
+                    <p>Phone: +123 456 7890</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Fetch criteria options based on selected table
+        function updateCriteriaOptions() {
+            var table = document.getElementById('tableSelect').value;
+
+            if (table) {
+                // Fetch the criteria for the selected table from the backend
+                fetch(`/get_criteria/${table}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        var criteriaSelect = document.getElementById('criteriaSelect');
+                        var criteriaValueDiv = document.getElementById('criteriaValueDiv');
+                        criteriaSelect.innerHTML = '<option value="">-- Select Criteria --</option>';
+
+                        // Add options for the selected table's criteria
+                        data.forEach(function(criterion) {
+                            var option = document.createElement('option');
+                            option.value = criterion;
+                            option.textContent = criterion.charAt(0).toUpperCase() + criterion.slice(1);
+                            criteriaSelect.appendChild(option);
+                        });
+
+                        // Display the criteria value input if criteria are available
+                        if (data.length > 0) {
+                            criteriaValueDiv.style.display = 'block';
+                        } else {
+                            criteriaValueDiv.style.display = 'none';
+                        }
+                    });
+            } else {
+                // Hide criteria value input if no table is selected
+                document.getElementById('criteriaSelect').innerHTML = '<option value="">-- Select Criteria --</option>';
+                document.getElementById('criteriaValueDiv').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

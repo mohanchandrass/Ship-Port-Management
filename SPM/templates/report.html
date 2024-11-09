@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ship Port Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        a:hover {
+            text-decoration: underline;
+            color: #0056b3;
+        }
+
+        a.active {
+            color: #ffc107;
+            font-weight: bold;
+        }
+
+        footer {
+            background: #111;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        .footer-left, .footer-right {
+            margin: 10px;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            padding-bottom: 150px;
+        }
+
+        .container h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .container h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .footer-link {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+
+        .download-link i {
+            margin-right: 8px;
+        }
+
+        .download-link {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .download-link:hover {
+            text-decoration: underline;
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url_for('home') }}">Ship Port Management</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            {% if session.get('username') %}
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'list_ships' %}active{% endif %}" href="{{ url_for('list_ships') }}">Ships</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'list_captains' %}active{% endif %}" href="{{ url_for('list_captains') }}">Captains</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'list_ports' %}active{% endif %}" href="{{ url_for('list_ports') }}">Ports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'report' %}active{% endif %}" href="{{ url_for('report') }}">Reports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('logout') }}">Logout ({{ session['username'] }})</a>
+                    </li>
+                </ul>
+            </div>
+            {% else %}
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'login' %}active{% endif %}" href="{{ url_for('login') }}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'signup' %}active{% endif %}" href="{{ url_for('signup') }}">Signup</a>
+                    </li>
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Generate Reports(click link)</h1>
+
+        <!-- Combined Report Option -->
+        <h2>Combined Reports</h2>
+        <ul>
+            <li><a href="{{ url_for('generate_combined_report_pdf') }}" class="download-link"><i class="fas fa-download"></i> Download Combined Report as PDF</a></li>
+            <li><a href="{{ url_for('generate_combined_report_csv') }}" class="download-link"><i class="fas fa-download"></i> Download Combined Report as CSV</a></li>
+        </ul>
+
+        <h2>Reports for Ships</h2>
+        <ul>
+            <li><a href="{{ url_for('generate_ships_report_pdf') }}" class="download-link"><i class="fas fa-download"></i> Download Ships Report as PDF</a></li>
+            <li><a href="{{ url_for('generate_ships_report_csv') }}" class="download-link"><i class="fas fa-download"></i> Download Ships Report as CSV</a></li>
+        </ul>
+
+        <h2>Reports for Captains</h2>
+        <ul>
+            <li><a href="{{ url_for('generate_captains_report_pdf') }}" class="download-link"><i class="fas fa-download"></i> Download Captains Report as PDF</a></li>
+            <li><a href="{{ url_for('generate_captains_report_csv') }}" class="download-link"><i class="fas fa-download"></i> Download Captains Report as CSV</a></li>
+        </ul>
+
+        <h2>Reports for Ports</h2>
+        <ul>
+            <li><a href="{{ url_for('generate_ports_report_pdf') }}" class="download-link"><i class="fas fa-download"></i> Download Ports Report as PDF</a></li>
+            <li><a href="{{ url_for('generate_ports_report_csv') }}" class="download-link"><i class="fas fa-download"></i> Download Ports Report as CSV</a></li>
+        </ul>
+
+        <h2>Reports for Cargo</h2>
+        <ul>
+            <li><a href="{{ url_for('generate_cargo_report_pdf') }}" class="download-link"><i class="fas fa-download"></i> Download Cargo Report as PDF</a></li>
+            <li><a href="{{ url_for('generate_cargo_report_csv') }}" class="download-link"><i class="fas fa-download"></i> Download Cargo Report as CSV</a></li>
+        </ul>
+
+        <h2>Reports for Reserve Ports</h2>
+        <ul>
+            <li><a href="{{ url_for('generate_reserve_ports_report_pdf') }}" class="download-link"><i class="fas fa-download"></i> Download Reserve Ports Report as PDF</a></li>
+            <li><a href="{{ url_for('generate_reserve_ports_report_csv') }}" class="download-link"><i class="fas fa-download"></i> Download Reserve Ports Report as CSV</a></li>
+        </ul>
+
+        <h2>Reports for Ship Cargo</h2>
+        <ul>
+            <li><a href="{{ url_for('generate_ship_cargo_report_pdf') }}" class="download-link"><i class="fas fa-download"></i> Download Ship Cargo Report as PDF</a></li>
+            <li><a href="{{ url_for('generate_ship_cargo_report_csv') }}" class="download-link"><i class="fas fa-download"></i> Download Ship Cargo Report as CSV</a></li>
+        </ul>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-left">
+                <a href="#" class="footer-link">Privacy Policy</a> | <a href="#" class="footer-link">Terms of Service</a>
+            </div>
+            <div class="footer-right">
+                &copy; 2024 Ship Port Management
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book a Port</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- FontAwesome CSS for Ship Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- External CSS -->
+    <link  rel="stylesheet" href="E:\DBMS project\static\bookport.css">
+    </style>
+</head>
+<style>
+    body {
+    background-image: url('path/to/your/image.jpg'); /* Replace with the path to your image */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: #fff; /* Ensures text is readable on a darker background */
+    background: linear-gradient(to bottom, #004d99, #66b3ff); /* A gradient from dark blue to light blue */
+    color: #fff; /* Ensures text is readable */
+}
+</style>
+<body>
+    <div class="overlay"></div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url_for('home') }}">Ship Port Management</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            {% if session.get('username') %}
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('list_ships') }}">Ships</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('list_captains') }}">Captains</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('list_ports') }}">Ports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('logout') }}">Logout ({{ session['username'] }})</a>
+                    </li>
+                </ul>
+            </div>
+            {% else %}
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('signup') }}">Signup</a>
+                    </li>
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <h1 class="text-center">Book a Docking Spot</h1>
+        <p class="text-center lead">Select a port and an available docking spot to secure your booking.</p>
+        
+        <form action="{{ url_for('book_port_submit') }}" method="POST">
+            <!-- Select Port -->
+            <div class="mb-3">
+                <label for="port" class="form-label">Select Port</label>
+                <select class="form-select" id="port" name="port" required>
+                    <option value="" disabled selected>Choose a port</option>
+                    <option value="Port A">Port A</option>
+                    <option value="Port B">Port B</option>
+                    <option value="Port C">Port C</option>
+                    <!-- Add more ports as needed -->
+                </select>
+            </div>
+
+            <!-- Select Docking Spot -->
+            <div class="mb-3">
+                <label for="dock_spot" class="form-label">Available Docking Spot</label>
+                <select class="form-select" id="dock_spot" name="dock_spot" required>
+                    <option value="" disabled selected>Choose a docking spot</option>
+                    <option value="1">Spot 1</option>
+                    <option value="2">Spot 2</option>
+                    <option value="3">Spot 3</option>
+                    <option value="4">Spot 4</option>
+                    <option value="5">Spot 5</option>
+                    <option value="6">Spot 6</option>
+                    <option value="7">Spot 7</option>
+                    <option value="8">Spot 8</option>
+                </select>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary btn-lg">Book Docking Spot</button>
+            </div>
+        </form>
+    </div>
+    <!-- Footer -->
+    <footer class="bg-dark text-white mt-4">
+            <div class="row py-4">
+                <div class="col-md-6">
+                    <h5>Ship Port Management</h5>
+                    <p>Efficiently managing ship ports and all related operations.</p>
+                </div>
+                <div class="col-md-3">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('home') }}" class="text-white">Home</a></li>
+                        <li><a href="{{ url_for('list_ships') }}" class="text-white">Ships</a></li>
+                        <li><a href="{{ url_for('list_ports') }}" class="text-white">Ports</a></li>
+                        <li><a href="{{ url_for('list_captains') }}" class="text-white">Captains</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Contact Us</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-envelope"></i> info@shipportmanagement.com</li>
+                        <li><i class="bi bi-phone"></i> +1 234 567 890</li>
+                        <li><i class="bi bi-geo-alt"></i> 123 Ship St, Port City, Ocean</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="text-center py-3 bg-secondary">
+            <p>&copy; 2024 Ship Port Management. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
