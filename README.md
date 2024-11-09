@@ -1,4 +1,4 @@
-# Ship-Port-Management\
+# Ship-Port-Management
 Problem Statement
 The goal of this project is to develop a comprehensive Ship Port Management System as a web-based application that enables efficient management and tracking of port operations. The system will focus on managing critical data related to ships, ports, cargo, and captains to streamline operations and enhance decision-making for port authorities and stakeholders.
 
