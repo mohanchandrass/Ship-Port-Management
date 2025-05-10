@@ -6,7 +6,7 @@ The goal of this project is to develop a comprehensive Ship Port Management Syst
 
 📊 ER Diagram
 
-https://github.com/user-attachments/assets/fba87448-09b8-4ded-8f67-ca7f89ef0d4c
+![image](https://github.com/user-attachments/assets/fba87448-09b8-4ded-8f67-ca7f89ef0d4c)
 
 ⚙️ Implementation
 
