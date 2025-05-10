@@ -3,4 +3,4 @@ Flask-Login==0.6.2
 Flask-WTF==1.1.1
 WTForms==3.1.1
 Gunicorn
-Werkzeug==2.0.2
+Werkzeug
