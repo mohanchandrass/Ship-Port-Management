@@ -61,8 +61,7 @@ Visit http://127.0.0.1:5000/ in your browser to access the application.
 👥 Team Members
 
 - Mohan Chandra S S - https://github.com/mohanchandrass
-- Pratam Rajesh Vernaker - https://github.com/pratamraj
-- [Member 3 Name] - https://github.com/[member3github] *(Add if applicable)*
+- Karthik S M - https://github.com/karthikbtech23
 
 📄 License
 
