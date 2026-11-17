@@ -63,7 +63,7 @@ Visit http://127.0.0.1:5000/ in your browser to access the application.
 👥 Team Members
 
 - Mohan Chandra S S - https://github.com/mohanchandrass
-- Karthik S M - https://github.com/karthikbtech23
+- Karthik S M - https://github.com/karthik655-glicth
 
 📄 License
 
